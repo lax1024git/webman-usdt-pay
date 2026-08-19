@@ -1,0 +1,70 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * 后台菜单多语言（按 slug 稳定映射，与中文 name 解耦）。
+ * 改中文菜单名只需改控制器 menuConfig + 同步菜单；改英文只需改本文件，无需重新打包前端。
+ *
+ * 结构: slug => ['en' => 'English title']
+ * zh-CN 始终取权限表/菜单配置中的 name。
+ */
+return [
+    'activity' => ['en' => 'Activities'],
+    'activity-list' => ['en' => 'Activity list'],
+    'activity-record' => ['en' => 'Activity records'],
+    'admin-menu' => ['en' => 'Admins'],
+    'article-menu' => ['en' => 'Articles'],
+    'auth' => ['en' => 'Access control'],
+    'banner-menu' => ['en' => 'Banners'],
+    'console' => ['en' => 'Console'],
+    'content' => ['en' => 'Content'],
+    'customer-service-menu' => ['en' => 'Support links'],
+    'dashboard' => ['en' => 'Overview'],
+    'dict-menu' => ['en' => 'Data dictionary'],
+    'export-job-menu' => ['en' => 'Export jobs'],
+    'finance' => ['en' => 'Finance'],
+    'finance-deposit' => ['en' => 'Deposit records'],
+    'finance-platform' => ['en' => 'Payment channels'],
+    'finance-recharge' => ['en' => 'Recharge orders'],
+    'finance-withdraw' => ['en' => 'Withdraw orders'],
+    'ip-whitelist-menu' => ['en' => 'IP whitelist'],
+    'lang-menu' => ['en' => 'Languages'],
+    'lang-text-menu' => ['en' => 'Translation texts'],
+    'log-menu' => ['en' => 'Operation logs'],
+    'member' => ['en' => 'Members'],
+    'member-agent' => ['en' => 'Agent list'],
+    'member-brokerage' => ['en' => 'Commission pool'],
+    'member-brokerage-water' => ['en' => 'Commission ledger'],
+    'member-card' => ['en' => 'Collection account'],
+    'member-credit-manage' => ['en' => 'Credit score'],
+    'member-credit-record' => ['en' => 'Credit score logs'],
+    'member-ip' => ['en' => 'IP monitoring'],
+    'member-list' => ['en' => 'Member list'],
+    'member-message' => ['en' => 'Inbox'],
+    'member-realname' => ['en' => 'KYC verification'],
+    'member-rw' => ['en' => 'Recharge/Withdraw flow'],
+    'member-water' => ['en' => 'Fund flow'],
+    'member-wool' => ['en' => 'Wool party risk users'],
+    'notice-menu' => ['en' => 'Notices'],
+    'notification-menu' => ['en' => 'System notification'],
+    'permission-menu' => ['en' => 'Permissions'],
+    'report' => ['en' => 'Reports'],
+    'report-comprehensive' => ['en' => 'Comprehensive report'],
+    'report-daily' => ['en' => 'Daily report'],
+    'report-finance-daily' => ['en' => 'Finance daily report'],
+    'report-register' => ['en' => 'Registration report'],
+    'role-menu' => ['en' => 'Roles'],
+    'service-center' => ['en' => 'Service center'],
+    'service-center-config' => ['en' => 'Center info'],
+    'service-center-studio-cert' => ['en' => 'Studio certification'],
+    'setting-menu' => ['en' => 'System parameters'],
+    'system-config' => ['en' => 'System'],
+    'task' => ['en' => 'Tasks'],
+    'task-ad-config' => ['en' => 'Ad slot config'],
+    'task-ad-order' => ['en' => 'Ad orders'],
+    'task-advertis-space' => ['en' => 'Ad charts'],
+    'task-ai-config' => ['en' => 'AI custody config'],
+    'task-ai-trust' => ['en' => 'AI custody orders'],
+    'video-menu' => ['en' => 'Videos'],
+];

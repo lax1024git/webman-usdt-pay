@@ -1,0 +1,16 @@
+# 编译 Linux 扩展（需 phpize、gcc、libssl-dev）
+#   cd ext/financeos_loader && make -f Makefile.manual
+
+PHP ?= php
+PHPIZE ?= phpize
+
+all:
+	$(PHPIZE)
+	./configure --enable-financeos-loader
+	$(MAKE) -f Makefile
+
+clean:
+	$(MAKE) -f Makefile clean || true
+	$(PHPIZE) --clean || true
+
+.PHONY: all clean

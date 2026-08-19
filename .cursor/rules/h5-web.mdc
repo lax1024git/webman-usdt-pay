@@ -1,0 +1,11 @@
+---
+description: H5 用户端已下线说明
+globs: web/**/*.{vue,ts,tsx,js}
+alwaysApply: false
+---
+
+# H5 前端（已下线）
+
+当前仓库为**纯管理壳**，`/api/*` 与 `web/` H5 用户端已剥离。
+
+若用户明确要求恢复 H5，再重新引入 Vue3 + Vant 工程并对接新建的公共 API。

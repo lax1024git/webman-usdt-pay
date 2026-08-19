@@ -1,0 +1,38 @@
+---
+description: API 响应格式、JWT 认证与路由约定
+globs: app/**/*.php,frontend/src/api/**/*.ts,config/routes/**/*.php
+alwaysApply: false
+---
+
+# API 约定
+
+## 统一响应
+
+```json
+{ "code": 200, "msg": "success", "data": {} }
+{ "code": 40001, "msg": "error message", "data": null }
+```
+
+- 成功：`code === 200`
+- 业务/校验错误：非 200，错误码见 `doc/接口文档.md`（若文档缺失则以代码为准）
+- 不要返回与项目不一致的自定义 envelope
+
+## 认证
+
+- JWT：`Authorization: Bearer <access_token>`
+- 另有 `refresh_token` 刷新
+- Access TTL：2h（`JWT_ACCESS_TTL=7200`）
+- Refresh TTL：7d（`JWT_REFRESH_TTL=604800`）
+
+## 路由前缀
+
+| 前缀 | 用途 | 路由文件 |
+|------|------|----------|
+| `/admin/*` | 管理后台（当前唯一 API 面） | `config/routes/admin.php` |
+| `/api/*` | **已下线** | `config/routes/api.php`（空文件） |
+
+## 实现要求
+
+- 入参校验放在 Controller 或校验层，失败返回明确 `msg`
+- 权限：RBAC 中间件；后台接口默认需登录 + 权限
+- 当前为纯管理壳，勿新增 H5 业务路由除非用户明确要求

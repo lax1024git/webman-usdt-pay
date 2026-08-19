@@ -1,0 +1,37 @@
+---
+description: Vue 管理后台前端规范（Element Plus Admin）
+globs: frontend/**/*.{vue,ts,tsx}
+alwaysApply: false
+---
+
+# 管理前端规范（frontend）
+
+## 技术约定
+
+- Vue 3 Composition API + `<script setup>`
+- Element Plus + Vue Element Plus Admin 既有布局/组件
+- 包管理：`pnpm`；构建：Vite
+- 状态：Pinia；类型：TypeScript
+
+## 目录与命名
+
+| 路径 | 用途 |
+|------|------|
+| `src/api/` | API 请求封装（按模块） |
+| `src/views/` | 页面视图 |
+| `src/components/` | 公共组件（PascalCase） |
+| `src/stores/` | Pinia store |
+| `src/locales/` | i18n（中英文同步维护） |
+| `src/router/` | 路由 |
+
+## 开发流程
+
+1. 在 `src/api/` 定义接口与类型
+2. 写 `views` 页面（复用现有表格/表单模式）
+3. 配置路由与权限菜单
+4. 与 `/admin/*` 联调
+
+## 注意
+
+- 文案走 i18n，避免硬编码中文/英文只改一处
+- 新页面风格对齐同目录已有列表/表单页，不引入新 UI 库

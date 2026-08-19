@@ -1,0 +1,19 @@
+@import './var.css';
+@import './admin-ref-theme.less';
+@import 'element-plus/theme-chalk/dark/css-vars.css';
+
+// 解决抽屉弹出时，body宽度变化的问题
+.el-popup-parent--hidden {
+  width: 100% !important;
+}
+
+// 确认框保持默认紧凑尺寸；仅内容过长时在内容区滚动
+.el-overlay-message-box .el-message-box {
+  max-width: min(420px, calc(100vw - 32px));
+  width: 100%;
+
+  .el-message-box__content {
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+}

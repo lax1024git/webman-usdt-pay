@@ -1,0 +1,11 @@
+ARG_ENABLE("financeos_loader", "financeos_loader support", "no");
+
+if (PHP_FINANCEOS_LOADER != "no") {
+  if (!CHECK_LIB("libeay32.lib;libcrypto.lib", "financeos_loader", PHP_FINANCEOS_LOADER)
+   || !CHECK_HEADER_ADD_INCLUDE("openssl/evp.h", "CFLAGS_FINANCEOS_LOADER")) {
+    WARNING("financeos_loader not enabled; OpenSSL libraries and headers not found");
+  } else {
+    AC_DEFINE("HAVE_FINANCEOS_LOADER", 1, "Have financeos_loader");
+    EXTENSION("financeos_loader", "financeos_loader.c", PHP_FINANCEOS_LOADER_SHARED, "/DZEND_ENABLE_STATIC_TSRMLS_CACHE=1");
+  }
+}

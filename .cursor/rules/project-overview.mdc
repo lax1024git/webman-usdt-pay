@@ -1,0 +1,44 @@
+---
+description: 纯管理壳全栈项目概览、技术栈、目录与开发流程
+alwaysApply: true
+---
+
+# 项目概览
+
+**纯管理壳**：Webman 后台 API + Vue Element Plus Admin。业务域（会员/撮合/财务/H5）已剥离。
+
+## 技术栈
+
+| 层级 | 技术 |
+|------|------|
+| 后端 | PHP 8.1+ / Webman ~2.2.3 / Eloquent / MySQL 8 / Redis 7 |
+| 管理前端 | Vue 3 + Element Plus Admin / Vite / Pinia / TypeScript / pnpm |
+
+## 核心目录
+
+```
+app/admin/controller/   # 后台控制器
+app/model/sys/          # 系统模型（sy_*）
+app/service/            # 业务逻辑层
+config/routes/admin.php # 后台路由（/admin/*）
+config/routes/api.php   # 已下线（空壳）
+frontend/               # 管理后台
+doc/                    # 正式文档（权威）
+```
+
+## 保留模块
+
+登录/JWT、管理员、角色权限、菜单、字典、系统设置、日志、IP 白名单、上传、通知、多语言、通用导出。
+
+## 开发流程
+
+- **后端**：路由 → Controller → Service → Model
+- **管理前端**：`src/api` → 页面 → 动态菜单 → 联调
+- **权限**：RBAC + 中间件；表结构由 Model `tableSchema()` + `php webman model` 同步
+
+## AI 协助约定
+
+- 优先复用现有模式与命名，不另起一套风格
+- 生成控制器时同步生成对应 Service
+- 接口含参数校验与错误处理；前端含 TypeScript 类型
+- 不要恢复已删除的 H5 `/api` 或业务域，除非用户明确要求

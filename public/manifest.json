@@ -1,0 +1,16 @@
+{
+    "name": "OAG",
+    "short_name": "OAG",
+    "start_url": "/",
+    "icons": [
+      {
+        "src": "/temp.png",
+        "sizes": "144x144",
+        "type": "image/png"
+      }
+    ],
+    "background_color": "#000000",
+    "theme_color": "#000000",
+    "display": "standalone"
+  }
+  

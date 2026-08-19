@@ -1,0 +1,102 @@
+<script lang="tsx">
+import { defineComponent, computed, ref, unref } from 'vue'
+import { Collapse } from '@/components/Collapse'
+import { LocaleDropdown } from '@/components/LocaleDropdown'
+import { SizeDropdown } from '@/components/SizeDropdown'
+import { UserInfo } from '@/components/UserInfo'
+import { Screenfull } from '@/components/Screenfull'
+import { Breadcrumb } from '@/components/Breadcrumb'
+import { Setting } from '@/components/Setting'
+import { Icon } from '@/components/Icon'
+import HeaderNotify from './HeaderNotify.vue'
+import { useAppStore } from '@/store/modules/app'
+import { useDesign } from '@/hooks/web/useDesign'
+
+const { getPrefixCls, variables } = useDesign()
+
+const prefixCls = getPrefixCls('tool-header')
+
+const appStore = useAppStore()
+
+// 面包屑
+const breadcrumb = computed(() => appStore.getBreadcrumb)
+
+// 折叠图标
+const hamburger = computed(() => appStore.getHamburger)
+
+// 全屏图标
+const screenfull = computed(() => appStore.getScreenfull)
+
+// 尺寸图标
+const size = computed(() => appStore.getSize)
+
+// 布局
+const layout = computed(() => appStore.getLayout)
+
+// 多语言图标
+const locale = computed(() => appStore.getLocale)
+
+export default defineComponent({
+  name: 'ToolHeader',
+  setup() {
+    const hideSetting = computed(() => import.meta.env.VITE_HIDE_GLOBAL_SETTING === 'true')
+    const settingRef = ref<any>(null)
+
+    return () => (
+      <div
+        id={`${variables.namespace}-tool-header`}
+        class={[
+          prefixCls,
+          'h-[var(--top-tool-height)] relative px-[var(--top-tool-p-x)] flex items-center justify-between'
+        ]}
+      >
+        {layout.value !== 'top' ? (
+          <div class="h-full flex items-center">
+            {hamburger.value && layout.value !== 'cutMenu' ? (
+              <Collapse class="custom-hover" color="var(--top-header-text-color)"></Collapse>
+            ) : undefined}
+            {breadcrumb.value ? <Breadcrumb class="<md:hidden"></Breadcrumb> : undefined}
+          </div>
+        ) : undefined}
+        <div class="h-full flex items-center">
+          {screenfull.value ? (
+            <Screenfull class="custom-hover" color="var(--top-header-text-color)"></Screenfull>
+          ) : undefined}
+          {size.value ? (
+            <SizeDropdown class="custom-hover" color="var(--top-header-text-color)"></SizeDropdown>
+          ) : undefined}
+          {locale.value ? (
+            <LocaleDropdown
+              class="custom-hover"
+              color="var(--top-header-text-color)"
+            ></LocaleDropdown>
+          ) : undefined}
+          <HeaderNotify />
+          <UserInfo></UserInfo>
+          {!unref(hideSetting) ? (
+            <div
+              class="custom-hover flex items-center justify-center w-[40px] h-[40px]"
+              onClick={() => settingRef.value?.open?.()}
+              title="Setting"
+            >
+              <Icon
+                icon="vi-ant-design:setting-outlined"
+                color="var(--top-header-text-color)"
+              ></Icon>
+            </div>
+          ) : undefined}
+        </div>
+        {!unref(hideSetting) ? <Setting ref={settingRef}></Setting> : undefined}
+      </div>
+    )
+  }
+})
+</script>
+
+<style lang="less" scoped>
+@prefix-cls: ~'@{adminNamespace}-tool-header';
+
+.@{prefix-cls} {
+  transition: left var(--transition-time-02);
+}
+</style>

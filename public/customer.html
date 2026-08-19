@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Customer Service</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #888;
+            font-size: 13px;
+            font-family: sans-serif;
+        }
+
+        .loading-text {
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #191919;
+            color: #fff;
+            font-size: 13px;
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loading" id="loadingText">
+        <span class="loading-text">加载智能会话服务中...</span>
+    </div>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const jsUrl = params.get('url');
+
+        if (jsUrl) {
+            const script = document.createElement('script');
+            script.src = decodeURIComponent(jsUrl);
+            script.onload = () => {
+                // 获取本地存储中的用户信息以便注入到客服系统
+                try {
+                    const userStoreStr = localStorage.getItem('user');
+                    if (userStoreStr) {
+                        const userStore = JSON.parse(userStoreStr);
+                        const userInfo = userStore?.userInfo?.user_info;
+                        if (userInfo && userInfo.id) {
+                            window.ssq = window.ssq || [];
+                            window.ssq.push('setLoginInfo', {
+                                user_id: userInfo.id,
+                                user_name: userInfo.user_name || '',
+                                language: 'zh-CN',
+                                phone: userInfo.mobile || '',
+                                email: userInfo.user_name || '',
+                                description: '',
+                                label_names: [],
+                                update_label_type: 'update',
+                                custom_fields_ext: {}
+                            });
+                        }
+                    }
+                } catch (e) {
+                    console.error('Customer info config error:', e);
+                }
+
+                let retry = 0;
+                let chatHasOpened = false;
+
+                const timer = setInterval(() => {
+                    retry++;
+                    let clicked = false;
+                    const btn = document.querySelector('.view_btn_chat_pglag') || document.querySelector('#s-chat-plugin');
+
+                    if (btn) {
+                        try {
+                            if (btn.tagName.toLowerCase() === 'iframe') {
+                                // Salesmartly 整个以 iframe 存在
+                                if (btn.offsetHeight < 100) {
+                                    if (chatHasOpened) {
+                                        // 以前打开过，现在被变小了（用户点了最小化/关闭）
+                                        window.parent.postMessage({ type: 'closeCsPopup' }, '*');
+                                        chatHasOpened = false;
+                                    } else {
+                                        // 还没打开过，尝试点击里面
+                                        if (btn.contentDocument) {
+                                            const innerBtn = btn.contentDocument.querySelector('.view_btn_chat_pglag');
+                                            if (innerBtn) {
+                                                innerBtn.click();
+                                                clicked = true;
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    // 展开状态
+                                    chatHasOpened = true;
+                                }
+                            } else {
+                                // 如果是原生的 DIV
+                                const win = document.querySelector('.view_win_chat_pglag') || document.querySelector('[class*="chat_win"]');
+                                const isExpanded = win && win.offsetHeight > 100 && window.getComputedStyle(win).display !== 'none';
+
+                                if (isExpanded) {
+                                    chatHasOpened = true;
+                                } else {
+                                    if (chatHasOpened) {
+                                        // 从已展开变为隐藏了
+                                        window.parent.postMessage({ type: 'closeCsPopup' }, '*');
+                                        chatHasOpened = false;
+                                    } else if (btn && btn.offsetHeight > 0) {
+                                        btn.click();
+                                        clicked = true;
+                                    }
+                                }
+                            }
+                        } catch (e) { }
+                    }
+
+                    if (clicked || chatHasOpened) {
+                        const loadingText = document.getElementById('loadingText');
+                        if (loadingText) loadingText.style.display = 'none';
+                    }
+
+                    if (retry > 50 && !chatHasOpened && !clicked) {
+                        clearInterval(timer); // 只有真正的死等失败才销毁轮询
+                        const loadingText = document.getElementById('loadingText');
+                        if (loadingText) loadingText.innerText = "网络拥堵加载耗时较长，请手动点击右下角圆球";
+                    }
+                }, 500);
+            };
+            script.onerror = () => {
+                const loadingText = document.getElementById('loadingText');
+                if (loadingText) loadingText.innerText = "加载失败";
+            };
+            document.body.appendChild(script);
+        } else {
+            document.getElementById('loadingText').innerText = "无效的客服链接";
+        }
+    </script>
+</body>
+
+</html>

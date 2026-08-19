@@ -1,0 +1,98 @@
+# Pubmatic 压测环境
+# 默认连远程库 103.41.19.169；本地 MySQL 可选（profile local-db）
+#
+# 启动（远程库）:
+#   docker compose up -d --build
+#
+# 从远程拉库到本地 MySQL 再压测:
+#   docker compose --profile local-db up -d mysql
+#   bash docker/scripts/pull-db.sh
+#   改 docker/.env: DB_HOST=mysql, SKIP_WAIT_DB=0 后 restart webman
+#
+# 压测:
+#   docker compose --profile loadtest run --rm k6
+
+services:
+  mysql:
+    profiles: [local-db]
+    image: mysql:8.0
+    container_name: pubmatic-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ad_pubmatic
+      MYSQL_USER: ad_pubmatic
+      MYSQL_PASSWORD: ad_pubmatic
+      TZ: Asia/Shanghai
+    ports:
+      - "3307:3306"
+    volumes:
+      - pubmatic_mysql_data:/var/lib/mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --max_connections=500
+      - --innodb_buffer_pool_size=512M
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  redis:
+    image: redis:7-alpine
+    container_name: pubmatic-redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - pubmatic_redis_data:/data
+    command: redis-server --appendonly yes
+
+  webman:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: pubmatic-webman
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_started
+      mysql:
+        condition: service_healthy
+        required: false
+    ports:
+      - "8999:8999"
+    env_file:
+      - docker/.env
+    volumes:
+      - .:/app
+      - pubmatic_vendor:/app/vendor
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  k6:
+    profiles: [loadtest]
+    image: grafana/k6:0.54.0
+    depends_on:
+      webman:
+        condition: service_started
+    volumes:
+      - ./docker/k6:/scripts:ro
+    environment:
+      BASE_URL: http://webman:8999
+      LOGIN_ACCOUNT: "13539302982"
+      LOGIN_PASSWORD: "123456"
+      LEVEL_ID: "1"
+      MATCH_PASSWORD: "792193"
+      MATCH_TYPE: "0"
+      API_SIGN_SECRET: "akz8VEU!kru6kgk9dhp"
+      K6_VUS: "20"
+      K6_DURATION: "30s"
+    command: run /scripts/match-load.js
+
+volumes:
+  pubmatic_mysql_data:
+  pubmatic_redis_data:
+  pubmatic_vendor:

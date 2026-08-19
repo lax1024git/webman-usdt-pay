@@ -1,0 +1,35 @@
+---
+description: PHP/Webman 后端编码规范（Controller / Service / Model）
+globs: app/**/*.php,config/**/*.php,database/**/*.php
+alwaysApply: false
+---
+
+# PHP 后端规范
+
+## 编码
+
+- PHP 8.1+，文件首行 `declare(strict_types=1);`
+- 遵循 PSR-12
+- 架构：MVC + Service Layer；业务逻辑放 Service，Controller 只做入参/出参
+
+## 命名
+
+| 类型 | 规则 | 示例 |
+|------|------|------|
+| 控制器 | `XxxController` | `AdminController` |
+| 服务 | `XxxService` | `AdminService` |
+| 模型 | `XxxModel` | `AdminModel`、`RoleModel` |
+
+## 分层约定
+
+- `app/admin/controller` → 后台 `/admin/*`（当前唯一 API 面）
+- `/api/*` 已下线，勿新增 H5 控制器除非用户明确要求
+- 新建接口：先改 `config/routes/admin.php`，再写 Controller + Service
+- 生成 Controller 时必须同步生成对应 Service
+- 参数校验、类型提示、完整错误处理不可省略
+
+## 模型与表
+
+- 当前保留系统表前缀：`sy_`
+- 关联用逻辑外键（如 `admin_id`），不建 DB 外键
+- 表结构由 Model `tableSchema()` 定义，用 `php webman model` 同步
