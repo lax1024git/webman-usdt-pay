@@ -8,8 +8,11 @@
         <testsuite name="API">
             <directory>tests/Api</directory>
         </testsuite>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
     </testsuites>
     <php>
-        <env name="API_BASE_URL" value="http://127.0.0.1:8787"/>
+        <env name="API_BASE_URL" value="http://127.0.0.1:8999"/>
     </php>
 </phpunit>

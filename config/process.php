@@ -48,6 +48,11 @@ if (filter_var(env('WEBMAN_MINIMAL_PROCESS', false), FILTER_VALIDATE_BOOLEAN)) {
 }
 
 return $processes + [
+    'pay-scheduler' => [
+        'handler' => app\process\PayScheduler::class,
+        'count' => 1,
+        'reloadable' => false,
+    ],
     // File update detection and automatic reload
     'monitor' => [
         'handler' => app\process\Monitor::class,

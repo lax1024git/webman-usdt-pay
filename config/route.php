@@ -11,3 +11,4 @@ Route::get('/', function () {
 
 require __DIR__ . '/routes/admin.php';
 require __DIR__ . '/routes/api.php';
+require __DIR__ . '/routes/merchant.php';

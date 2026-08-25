@@ -16,6 +16,15 @@ use app\admin\controller\LangTextController;
 use app\admin\controller\DictController;
 use app\admin\controller\NotificationController;
 use app\admin\controller\ExportController;
+use app\admin\controller\PayMerchantController;
+use app\admin\controller\PayPlatformController;
+use app\admin\controller\PayDepositController;
+use app\admin\controller\PayWithdrawController;
+use app\admin\controller\PayWebhookLogController;
+use app\admin\controller\PayWalletController;
+use app\admin\controller\PayCollectionController;
+use app\admin\controller\PayBlacklistController;
+use app\admin\controller\PayReportController;
 use app\middleware\AuthMiddleware;
 use app\middleware\AdminLogMiddleware;
 use app\middleware\IpWhitelistMiddleware;
@@ -106,6 +115,40 @@ Route::group('/admin', function () {
     Route::post('/exports', [ExportController::class, 'store']);
     Route::get('/exports/{id:\d+}', [ExportController::class, 'show']);
     Route::delete('/exports/{id:\d+}', [ExportController::class, 'destroy']);
+
+    Route::get('/pay/merchants', [PayMerchantController::class, 'index']);
+    Route::get('/pay/merchants/{id:\d+}', [PayMerchantController::class, 'show']);
+    Route::post('/pay/merchants', [PayMerchantController::class, 'store']);
+    Route::put('/pay/merchants/{id:\d+}', [PayMerchantController::class, 'update']);
+    Route::post('/pay/merchants/{id:\d+}/reset-secret', [PayMerchantController::class, 'resetSecret']);
+
+    Route::get('/pay/platforms', [PayPlatformController::class, 'index']);
+    Route::put('/pay/platforms/{id:\d+}', [PayPlatformController::class, 'update']);
+
+    Route::get('/pay/deposits', [PayDepositController::class, 'index']);
+    Route::get('/pay/deposits/{id:\d+}', [PayDepositController::class, 'show']);
+    Route::post('/pay/deposits/{id:\d+}/manual-credit', [PayDepositController::class, 'manualCredit']);
+
+    Route::get('/pay/withdrawals', [PayWithdrawController::class, 'index']);
+    Route::get('/pay/withdrawals/{id:\d+}', [PayWithdrawController::class, 'show']);
+    Route::post('/pay/withdrawals/{id:\d+}/approve', [PayWithdrawController::class, 'approve']);
+    Route::post('/pay/withdrawals/{id:\d+}/reject', [PayWithdrawController::class, 'reject']);
+    Route::post('/pay/withdrawals/{id:\d+}/retry-broadcast', [PayWithdrawController::class, 'retryBroadcast']);
+
+    Route::get('/pay/webhook-logs', [PayWebhookLogController::class, 'index']);
+    Route::post('/pay/webhook-logs/{id:\d+}/retry', [PayWebhookLogController::class, 'retry']);
+
+    Route::get('/pay/wallets', [PayWalletController::class, 'index']);
+    Route::get('/pay/wallets/hot-balance', [PayWalletController::class, 'hotBalance']);
+    Route::get('/pay/collections', [PayCollectionController::class, 'index']);
+    Route::post('/pay/collections/trigger', [PayCollectionController::class, 'trigger']);
+    Route::post('/pay/collections/{id:\d+}/retry', [PayCollectionController::class, 'retry']);
+    Route::get('/pay/blacklists', [PayBlacklistController::class, 'index']);
+    Route::post('/pay/blacklists', [PayBlacklistController::class, 'store']);
+    Route::delete('/pay/blacklists/{id:\d+}', [PayBlacklistController::class, 'destroy']);
+    Route::get('/pay/reports/summary', [PayReportController::class, 'summary']);
+    Route::get('/pay/reports/daily', [PayReportController::class, 'daily']);
+    Route::get('/pay/reports/merchant/{id:\d+}', [PayReportController::class, 'merchant']);
 })->middleware([
     IpWhitelistMiddleware::class,
     AuthMiddleware::class,

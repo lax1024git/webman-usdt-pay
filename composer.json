@@ -37,7 +37,9 @@
     "webman/redis-queue": "^2.1",
     "itbdw/ip-database": "^3.0.2",
     "workerman/crontab": "^1.0",
-    "webman/push": "^1.1"
+    "webman/push": "^1.1",
+    "kornrunner/keccak": "^1.1",
+    "simplito/elliptic-php": "^1.0"
   },
   "suggest": {
     "ext-event": "For better performance. "

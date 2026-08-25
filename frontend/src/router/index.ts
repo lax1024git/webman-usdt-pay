@@ -42,6 +42,64 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
     }
   },
   {
+    path: '/merchant-portal/login',
+    component: () => import('@/views/MerchantPortal/Login.vue'),
+    name: 'MerchantPortalLogin',
+    meta: {
+      hidden: true,
+      title: '商户登录',
+      noTagsView: true
+    }
+  },
+  {
+    path: '/merchant-portal',
+    component: () => import('@/views/MerchantPortal/Layout.vue'),
+    name: 'MerchantPortal',
+    redirect: '/merchant-portal/dashboard',
+    meta: {
+      hidden: true,
+      title: '商户门户'
+    },
+    children: [
+      {
+        path: 'dashboard',
+        name: 'MerchantPortalDashboard',
+        component: () => import('@/views/MerchantPortal/Dashboard.vue'),
+        meta: { title: '概览' }
+      },
+      {
+        path: 'deposits',
+        name: 'MerchantPortalDeposit',
+        component: () => import('@/views/MerchantPortal/Deposit.vue'),
+        meta: { title: '入金订单' }
+      },
+      {
+        path: 'withdrawals',
+        name: 'MerchantPortalWithdraw',
+        component: () => import('@/views/MerchantPortal/Withdraw.vue'),
+        meta: { title: '出金订单' }
+      },
+      {
+        path: 'ledgers',
+        name: 'MerchantPortalLedger',
+        component: () => import('@/views/MerchantPortal/Ledger.vue'),
+        meta: { title: '资金流水' }
+      },
+      {
+        path: 'webhook-logs',
+        name: 'MerchantPortalWebhook',
+        component: () => import('@/views/MerchantPortal/WebhookLog.vue'),
+        meta: { title: '回调日志' }
+      },
+      {
+        path: 'settings',
+        name: 'MerchantPortalSettings',
+        component: () => import('@/views/MerchantPortal/Settings.vue'),
+        meta: { title: '账户设置' }
+      }
+    ]
+  },
+  {
     path: '/personal',
     component: Layout,
     redirect: '/personal/personal-center',

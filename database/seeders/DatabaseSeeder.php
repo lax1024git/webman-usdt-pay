@@ -61,7 +61,7 @@ return new class {
 
             echo "  -> Seeding settings...\n";
             DB::table('sy_settings')->insert([
-                ['key' => 'name', 'value' => json_encode('Webman Admin'), 'description' => '应用名称', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+                ['key' => 'name', 'value' => json_encode('USDT Admin'), 'description' => '应用名称', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
                 ['key' => 'logo', 'value' => json_encode(''), 'description' => '网站 logo', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
                 ['key' => 'admin_icon', 'value' => json_encode(''), 'description' => '网站 icon', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
                 ['key' => 'admin_google_auth_status', 'value' => json_encode('1'), 'description' => '后台操作谷歌验证', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
@@ -76,5 +76,7 @@ return new class {
                 ], JSON_UNESCAPED_UNICODE), 'description' => 'S3 对象存储配置', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ]);
         }
+
+        \database\seeders\PaySeeder::run();
     }
 };

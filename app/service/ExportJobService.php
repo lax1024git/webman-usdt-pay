@@ -19,8 +19,8 @@ class ExportJobService
 
     private const LOCK_TTL = 600;
 
-    /** @var list<string> 业务导出 handler 已移除；后续新增时在此注册 */
-    private const ALLOWED_TYPES = [];
+    /** @var list<string> */
+    private const ALLOWED_TYPES = ['pay_deposits', 'pay_withdrawals'];
 
     /**
      * @param array<string, mixed> $filters
@@ -124,7 +124,10 @@ class ExportJobService
      */
     public function typeOptions(): array
     {
-        return [];
+        return [
+            ['value' => 'pay_deposits', 'label' => '入金订单'],
+            ['value' => 'pay_withdrawals', 'label' => '出金订单'],
+        ];
     }
 
     /**
@@ -264,7 +267,11 @@ class ExportJobService
 
     private function handler(string $exportType): ExportHandlerInterface
     {
-        throw new BusinessException(ErrorCode::VALIDATION_FAILED, '不支持的导出类型');
+        return match ($exportType) {
+            'pay_deposits' => new \app\service\export\PayDepositExportHandler(),
+            'pay_withdrawals' => new \app\service\export\PayWithdrawExportHandler(),
+            default => throw new BusinessException(ErrorCode::VALIDATION_FAILED, '不支持的导出类型'),
+        };
     }
 
     /**

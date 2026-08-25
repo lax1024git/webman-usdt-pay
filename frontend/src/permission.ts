@@ -9,6 +9,7 @@ import { NO_REDIRECT_WHITE_LIST } from '@/constants'
 import { useUserStoreWithOut } from '@/store/modules/user'
 import { getMenusApi, getMeApi } from '@/api/login'
 import { normalizeRoleSlugs } from '@/utils/role'
+import { isMerchantLoggedIn } from '@/utils/merchantAuth'
 
 const { start, done } = useNProgress()
 
@@ -17,6 +18,22 @@ const { loadStart, loadDone } = usePageLoading()
 router.beforeEach(async (to, from, next) => {
   start()
   loadStart()
+  if (to.path.startsWith('/merchant-portal')) {
+    if (to.path === '/merchant-portal/login') {
+      if (isMerchantLoggedIn()) {
+        next({ path: '/merchant-portal/dashboard' })
+      } else {
+        next()
+      }
+      return
+    }
+    if (!isMerchantLoggedIn()) {
+      next({ path: '/merchant-portal/login', query: { redirect: to.fullPath } })
+      return
+    }
+    next()
+    return
+  }
   const permissionStore = usePermissionStoreWithOut()
   const appStore = useAppStoreWithOut()
   const userStore = useUserStoreWithOut()

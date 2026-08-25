@@ -27,6 +27,18 @@ class ModelSchemaSynchronizer
         'DictItemModel' => 85,
         'RolePermissionModel' => 90,
         'ExportJobModel' => 95,
+        // pay 模块 (pa_)
+        'PlatformModel' => 110,
+        'MerchantModel' => 120,
+        'MerchantAccountModel' => 130,
+        'WalletAddressModel' => 140,
+        'CollectionTaskModel' => 145,
+        'DepositOrderModel' => 150,
+        'WithdrawOrderModel' => 160,
+        'ChainTransactionModel' => 170,
+        'MerchantLedgerModel' => 180,
+        'WebhookLogModel' => 190,
+        'AddressBlacklistModel' => 200,
     ];
 
     /**
@@ -39,6 +51,7 @@ class ModelSchemaSynchronizer
         $patterns = [
             ['glob' => base_path('app/model/*.php'), 'namespace' => 'app\\model'],
             ['glob' => base_path('app/model/sys/*.php'), 'namespace' => 'app\\model\\sys'],
+            ['glob' => base_path('app/model/pay/*.php'), 'namespace' => 'app\\model\\pay'],
         ];
 
         foreach ($patterns as $pattern) {
